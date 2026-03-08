@@ -13,13 +13,8 @@ async def main(profile_json: str):
         sys.path.insert(0, profile["camoufox_lib_path"])
 
     from camoufox.async_api import AsyncCamoufox
-    from browserforge.fingerprints import Fingerprint
 
     headless_env = os.environ.get("HEADLESS", "false").lower() == "true"
-
-    # We remove 'os' from launch options because it conflicts with `fingerprint`.
-    # Camoufox generates fingerprint based on OS, but if we pass `fingerprint` explicitely,
-    # passing both might raise conflicts or cause unexpected behavior.
 
     launch_options = {
         "headless": headless_env or False,
@@ -30,19 +25,9 @@ async def main(profile_json: str):
     if "DISPLAY" not in os.environ and not headless_env:
         launch_options["headless"] = "virtual"
 
-    fp_data = profile.get("fingerprint")
-    if fp_data:
-        try:
-            # Reconstruct fingerprint properly
-            fp = Fingerprint(**fp_data) if isinstance(fp_data, dict) else fp_data
-            launch_options["fingerprint"] = fp
-        except Exception as e:
-            print("Error loading fingerprint", e)
-            # fallback to OS spoofing if fingerprint parsing fails
-            launch_options["os"] = profile["os"]
-    else:
-        # Generate on the fly using camoufox's parameter if none saved
-        launch_options["os"] = profile["os"]
+    # For now, pass os and proxy to Camoufox. It automatically spoofs timezone based on proxy IP using the GeoIP extension!
+    # So we don't need to manually spoof the timezone, the framework does it natively when we use proxy.
+    launch_options["os"] = profile["os"]
 
     if "proxy" in profile and profile["proxy"]:
         proxy_conf = profile["proxy"]

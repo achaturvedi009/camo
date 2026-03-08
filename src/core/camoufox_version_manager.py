@@ -5,6 +5,7 @@ import requests
 from pathlib import Path
 from src.core.db import SessionLocal, CamoufoxVersionModel
 import datetime
+import packaging.version
 
 VERSIONS_DIR = Path(os.path.expanduser("~/.camo/camoufox_versions"))
 VERSIONS_DIR.mkdir(parents=True, exist_ok=True)
@@ -13,8 +14,19 @@ class CamoufoxVersionManager:
     def fetch_available_versions(self):
         try:
             res = requests.get("https://pypi.org/pypi/camoufox/json", timeout=10)
-            releases = res.json().get("releases", {})
-            return sorted(list(releases.keys()), key=lambda s: list(map(int, s.split('.')[:3])), reverse=True)
+            releases = list(res.json().get("releases", {}).keys())
+
+            # Filter valid versions and sort
+            valid_releases = []
+            for r in releases:
+                try:
+                    packaging.version.parse(r)
+                    valid_releases.append(r)
+                except:
+                    pass
+
+            sorted_versions = sorted(valid_releases, key=packaging.version.parse, reverse=True)
+            return sorted_versions
         except Exception as e:
             print(f"Error fetching versions: {e}")
             return []
