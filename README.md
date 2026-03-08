@@ -60,3 +60,40 @@ A lightweight, login-free antidetect browser platform using Camoufox as the core
 - `src/core/`: Application logic, fingerprint generator, database models, process management, and version manager.
 - `src/ui/`: The Vue.js dashboard frontend.
 - `~/.camo/camoufox_versions/`: Directory where downloaded Camoufox versions are stored for isolation.
+
+## Building Executables
+
+You can package the FastAPI backend into a single executable file for your operating system using **PyInstaller**. This removes the need for Python or pip installations on the host machine.
+
+### Prerequisites
+
+First, install PyInstaller:
+```bash
+pip install pyinstaller
+```
+
+### Windows (.exe)
+
+Run the following command from the repository root:
+```bash
+pyinstaller --name "Camoufox_Antidetect" --onefile main.py
+```
+This will generate `Camoufox_Antidetect.exe` inside the `dist/` folder.
+
+### Linux (Executable)
+
+Run the following command from the repository root:
+```bash
+pyinstaller --name "Camoufox_Antidetect" --onefile main.py
+```
+This will generate an executable named `Camoufox_Antidetect` inside the `dist/` folder.
+
+### macOS (Executable / .app)
+
+Run the following command from the repository root:
+```bash
+pyinstaller --name "Camoufox_Antidetect" --onefile main.py
+```
+This will generate an executable named `Camoufox_Antidetect` inside the `dist/` folder.
+
+*Note: Since the UI is purely HTML/JS, you can distribute the `src/ui/` folder alongside your executable, and simply open `src/ui/index.html` in a web browser while the executable is running in the background.*
