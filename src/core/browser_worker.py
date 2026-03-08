@@ -17,6 +17,8 @@ async def main(profile_json: str):
     from src.chrome_emulation.integration.runtime_loader import get_chrome_emulation_bundle
     from src.permissions_spoofer.core.permissions_injector import permissions_injector
     from src.permissions_spoofer.integration.fingerprint_permission_mapper import generate_permission_rules
+    from src.canvas_spoofer.core.canvas_injector import canvas_injector
+    from src.canvas_spoofer.integration.fingerprint_canvas_adapter import integrate_canvas_seed
 
     headless_env = os.environ.get("HEADLESS", "false").lower() == "true"
 
@@ -50,13 +52,19 @@ async def main(profile_json: str):
                 # Assign permissions to fingerprint context so JS picks it up
                 fp_data["permissions"] = generate_permission_rules(fp_data)
 
+                # Sync Canvas Hash logic directly from advanced Canvas Spoofer subsystem
+                fp_data = integrate_canvas_seed(fp_data, profile.get("id", "default"))
+
                 # 1. Base Fingerprint Variables & General Spoofing
                 init_script = runtime_injector.build_init_script(fp_data)
 
                 # 2. Permissions Emulation
                 init_script += "\n\n" + permissions_injector.get_injection_script()
 
-                # 3. Chrome Specific Environment Emulation (if it's a chrome profile)
+                # 3. Canvas Emulation
+                init_script += "\n\n" + canvas_injector.get_injection_script()
+
+                # 4. Chrome Specific Environment Emulation (if it's a chrome profile)
                 is_chrome = "Chrome" in fp_data.get("userAgent", "") or "Chrome" in fp_data.get("navigator", {}).get("userAgent", "")
                 if is_chrome:
                     init_script += "\n\n" + get_chrome_emulation_bundle()
