@@ -11,6 +11,7 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
 - **Multi-Profile Management**: Create, edit, clone, and delete isolated profiles effortlessly via the clean local UI, without any login limitations.
 - **Deterministic Fingerprint Engine**: Our ultra-fast (`<10ms`) core automatically generates valid, logically consistent, layered browser fingerprints (User-Agent, Canvas, WebGL, AudioContext, Network, Hardware, TLS) based on OS presets (Windows, Linux, Android) using SHA-256 seeding.
 - **Enterprise Runtime JS Spoofing**: Injects a hardened emulation layer via the Chrome DevTools Protocol (`add_init_script`) directly into the Playwright context *before* any page JavaScript runs. Overrides `navigator`, `screen`, `canvas`, `webrtc`, and hardware specs gracefully while masking function signatures with `[native code]` patches.
+- **Enterprise Screen & Window Spoofing**: Clamps and mocks display primitives avoiding viewport detection mismatches securely. Simulates perfectly correlated bounds (`Outer >= Inner`) hiding headless execution window frames implicitly.
 - **Enterprise WebRTC Leak Protection Layer**: Dynamically blocks WebRTC media streams and STUN/TURN proxy discovery exploits preventing local internal network ranges (`192.168.x.x`) from leaking while ensuring external peer candidates reflect solely the active proxy IP flawlessly.
 - **Advanced Canvas Fingerprint Spoofing**: A dedicated enterprise pixel-noise rendering layer. Intercepts `toDataURL`, `toBlob`, and `getImageData`, silently shuffling pixel entropy perfectly tied to your profile ID, evading FingerprintJS canvas tracking schemas `< 1ms` speed overhead.
 - **Enterprise WebGL Spoofing**: An advanced deterministic GPU emulation layer mocking underlying hardware `VENDOR` and `RENDERER` profiles. Mocks maximum texture limits, exact anisotropic filtering extensions natively matching Windows/Mac/Linux GPU datasets, alongside randomized `readPixels` noise.
@@ -29,7 +30,7 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
 - **Backend API**: Local FastAPI / Uvicorn server handling all proxy, database, and process bridging.
 - **Core Orchestrator**: Manages parallel isolated `BrowserContext` instances.
 - **Fingerprint Engine (`src/fingerprint_engine/`)**: Datasets, builders, and validators for 10 levels of device modeling.
-- **Runtime Emulation (`src/runtime_spoofer/`, `src/chrome_emulation/`, `src/permissions_spoofer/`, `src/canvas_spoofer/`, `src/webgl_spoofer/`, `src/audio_spoofer/`, `src/font_spoofer/`, `src/webrtc_protector/`)**: Bundled JavaScript artifacts maintaining object prototype validity under adversarial inspection.
+- **Runtime Emulation (`src/runtime_spoofer/`, `src/chrome_emulation/`, `src/permissions_spoofer/`, `src/canvas_spoofer/`, `src/webgl_spoofer/`, `src/audio_spoofer/`, `src/font_spoofer/`, `src/webrtc_protector/`, `src/screen_spoofer/`)**: Bundled JavaScript artifacts maintaining object prototype validity under adversarial inspection.
 - **Frontend App**: Responsive Vue.js + Tailwind CSS local UI wrapper.
 
 ---
@@ -97,4 +98,5 @@ pyinstaller --name "CAMO_Controller" --onefile main.py
 - `src/audio_spoofer/`: Hooks `AnalyserNode` and offline rendering outputs shifting floating arrays resolving DataDome hash queries flawlessly.
 - `src/font_spoofer/`: Masks system fonts replacing TextMetrics results dynamically preventing CSS FontFace inspection attacks globally.
 - `src/webrtc_protector/`: Implements proxy-driven connection sanitization filtering localized IP SDP candidates blocking TCP/UDP routing leaks securely.
+- `src/screen_spoofer/`: Clamps viewport metrics consistently overriding mismatched window boundaries escaping native automation checks natively.
 - `src/ui/`: The dashboard GUI logic.
