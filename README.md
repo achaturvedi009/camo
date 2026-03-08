@@ -11,7 +11,8 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
 - **Multi-Profile Database Management**: Run thousands of distinct isolated profiles utilizing SQLAlchemy bounding over SQLite (`data/profiles.db`).
 - **Cryptographic Fingerprint Engine**: Ultra-fast `<10ms` core generating valid, logically consistent, layered hardware configurations based off profile SHA-256 seeding preventing regression collisions cleanly.
 - **Enterprise Runtime JS Spoofing**: Injects a hardened emulation layer via Playwright's `add_init_script`. Modifies generic navigator properties natively retaining `[native code]` `.toString()` validations.
-- **Advanced Canvas & WebGL Emulation**: Dedicated pixel-noise rendering engines dynamically shifting pixel bounds synchronously circumventing exact hash limits mapping perfectly over `UNMASKED_RENDERER` restrictions locally.
+- **Advanced Canvas Emulation**: Dedicated pixel-noise rendering engines dynamically shifting pixel bounds synchronously circumventing exact hash limits flawlessly.
+- **Enterprise WebGL Spoofing**: Deep mocking of `WebGLRenderingContext` and `WebGL2RenderingContext` allowing explicit hardware renderer outputs, extensions mapping, and texture limit shifting natively overriding `UNMASKED_RENDERER` restrictions locally.
 - **AudioContext Spoofing**: Wraps native `AudioBuffer` and `OfflineAudioContext` pipelines protecting analysis routines utilizing native offset arrays dynamically.
 - **Enterprise Font Emulation**: Maps perfectly localized bounding boxes bypassing precise CSS FontFace scaling tricks via TextMetrics injection limits mapping exactly to the chosen OS class correctly.
 - **WebRTC & Network Protections**: Defeats STUN/TURN proxy leaks directly via parsing asynchronous local IP blocks bridging only valid explicit assigned proxy paths globally blocking localized footprint discovery algorithms natively.
@@ -50,6 +51,7 @@ When a user triggers a profile start:
 ├── src/runtime_spoofer/      # Hooks primary UserAgent and screen descriptors seamlessly
 ├── src/screen_spoofer/       # Locks Resize propagation protecting display geometries explicitly
 ├── src/ui/                   # Vue.js frontend controller resolving API logic locally
+├── src/webgl_spoofer/        # Modifies GPU profiles, limits, precision formats, and rendering natively
 └── src/webrtc_protector/     # Modifies SDP negotiation states masking standard IP leaks explicitly
 ```
 
@@ -62,7 +64,7 @@ You can distribute the entire CAMO infrastructure as a standalone executable avo
 ### Windows (.exe)
 ```bash
 pip install pyinstaller
-pyinstaller --name "CAMO_Controller" --onefile main.py --hidden-import="uvicorn.logging" --hidden-import="uvicorn.loops" --hidden-import="uvicorn.loops.auto" --hidden-import="uvicorn.protocols" --hidden-import="uvicorn.protocols.http" --hidden-import="uvicorn.protocols.http.auto" --hidden-import="uvicorn.protocols.websockets" --hidden-import="uvicorn.protocols.websockets.auto" --hidden-import="uvicorn.lifespan" --hidden-import="uvicorn.lifespan.on"
+pyinstaller --name "CAMO_Controller" --onefile main.py --hidden-import="uvicorn.logging" --hidden-import="uvicorn.loops" --hidden-import="uvicorn.loops.auto" --hidden-import="uvicorn.protocols" --hidden-import="uvicorn.protocols.http" --hidden-import="uvicorn.protocols.http.auto" --hidden-import="uvicorn.websockets" --hidden-import="uvicorn.websockets.auto" --hidden-import="uvicorn.lifespan" --hidden-import="uvicorn.lifespan.on"
 ```
 
 ### Linux Package
