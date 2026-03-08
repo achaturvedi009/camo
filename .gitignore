@@ -1,7 +1,7 @@
 data/
 __pycache__/
 *.pyc
-api.log
-sannysoft.png
-test_camoufox*.py
-test_launch.py
+api_launch.log
+venv/
+dist/
+build/
