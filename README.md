@@ -19,61 +19,60 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
 - **Automated Validation Core**: Evaluates UA mismatches, graphic OS mapping disparities natively resolving strict validation checks before execution safely natively.
 - **Integrated Diagnostics UI**: Evaluates hardware spoof metrics visually via a local unified tracking dashboard booted securely mapping proxy health boundaries clearly on startup natively mapped efficiently.
 - **Timezone GeoIP Routing**: Reconciles public IP inputs inherently assigning the accurate UTC offset arrays explicitly masking mismatched browser timing metrics successfully natively via external parsing routes natively.
+- **Fingerprint Stability**: Screen and Window properties are actively clamped. Minimizing, maximizing, or resizing the window *does not* mutate the logical constraints presented to anti-bot scripts securely retaining hardware consistency rules.
 
 ---
 
-## 🏗 Subsystem Layout
+## 🚀 Execution Flow
 
-- **`src/api/`**: Main backend endpoints mapping UI boundaries to Playwright states correctly.
-- **`src/core/`**: Lower-layer orchestrators (Database Models, Processes).
-- **`src/fingerprint_engine/`**: The deterministic JSON hardware generator core.
-- **`src/runtime_spoofer/`**: Generalized Javascript `navigator` / JS API interceptors.
-- **`src/chrome_emulation/`**: Accurate `window.chrome.app` & `runtime` simulators masking headless boundaries tightly.
-- **`src/permissions_spoofer/`**: Promisified `.query()` maskers strictly tracking deterministic arrays precisely.
-- **`src/canvas_spoofer/`**: Low-level pixel manipulation and `toDataUrl` injection limits safely.
-- **`src/webgl_spoofer/`**: High-performance graphics extension manipulation overrides seamlessly.
-- **`src/audio_spoofer/`**: Floating array manipulations preventing generic hardware correlations accurately.
-- **`src/font_spoofer/`**: Measurement bounds preventing standard CSS bounding probes seamlessly.
-- **`src/webrtc_protector/`**: Subnet IP parsing arrays avoiding leak parameters correctly reliably.
-- **`src/camo/`**: The Enterprise configuration backend isolating user-directories (`profiles/`), checking fingerprint metrics (`security/`), generating media definitions (`runtime/`), managing localized proxy states (`network/`), handling dashboard analytics natively (`dashboard/`), and integrating engines successfully (`browser_engines/`).
+When a user triggers a profile start:
+1. `BrowserController` resolves the SQLite `ProfileModel`.
+2. `ProxyIpManager` asynchronously verifies health/latency bounds natively.
+3. `FingerprintConsistencyValidator` checks OS-GPU hardware overlaps ensuring zero logic gaps natively mapping to bounds seamlessly.
+4. Python injector interfaces (`screen_injector`, `canvas_injector`, `webgl_injector`, `chrome_env_injector`) aggregate JS payloads.
+5. Playwright CDP bindings initialize `--user-data-dir` contexts synchronously injecting all `<1ms` parsing layers accurately avoiding JS overrides completely overriding core metrics automatically.
+6. Diagnostic dashboard launches via FastAPI resolving JSON structures mapping explicitly verifying environment masking seamlessly.
 
 ---
 
-## 🚀 Installation & Setup
+## 🏗 Directory Architecture
 
-1. **Clone the Repository** and navigate into the folder.
-2. **Create a Virtual Environment** and install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Install Browser Binaries (Playwright Dependencies)**:
-   ```bash
-   playwright install-deps
-   ```
-
----
-
-## 💻 Usage
-
-1. **Start the Controller Backend:**
-   ```bash
-   python main.py
-   ```
-
-2. **Open the Control Panel UI:**
-   Open `src/ui/index.html` in any standard web browser (Chrome, Firefox, Safari).
-
-3. **Launch Profiles:**
-   Hit start on any assigned profiles and CAMO will orchestrate the database layers launching isolated binaries perfectly protected immediately routing into the diagnostic startup dashboard automatically correctly mapping validations visually successfully.
+```text
+├── src/api/                  # FastAPI router exposing JSON UI integrations seamlessly
+├── src/audio_spoofer/        # Advanced Float32Array channel manipulation protecting Web Audio API hashes
+├── src/camo/                 # Core logic, proxy bounds, media interceptors, validation, testing & diagnostics
+├── src/canvas_spoofer/       # Hash-based noise mapping on getImageData & toDataURL boundaries
+├── src/chrome_emulation/     # Complex mock APIs resolving window.chrome.loadTimes natively
+├── src/core/                 # Main Playwright worker loops and Profile data schemas natively
+├── src/fingerprint_engine/   # Deterministic Pydantic layers creating rigid hardware profile outputs safely
+├── src/font_spoofer/         # Replaces TextMetrics bounds neutralizing CSS probing natively
+├── src/permissions_spoofer/  # Wraps navigator.permissions accurately matching specific OS patterns reliably
+├── src/runtime_spoofer/      # Hooks primary UserAgent and screen descriptors seamlessly
+├── src/screen_spoofer/       # Locks Resize propagation protecting display geometries explicitly
+├── src/ui/                   # Vue.js frontend controller resolving API logic locally
+└── src/webrtc_protector/     # Modifies SDP negotiation states masking standard IP leaks explicitly
+```
 
 ---
 
-## 📦 Building Standalone Executables
+## 📦 Cross-Platform Build Instructions
 
-If you wish to distribute the CAMO Backend natively.
+You can distribute the entire CAMO infrastructure as a standalone executable avoiding any virtual environment constraints natively via PyInstaller or Nuitka.
+
+### Windows (.exe)
 ```bash
 pip install pyinstaller
-pyinstaller --name "CAMO_Controller" --onefile main.py
+pyinstaller --name "CAMO_Controller" --onefile main.py --hidden-import="uvicorn.logging" --hidden-import="uvicorn.loops" --hidden-import="uvicorn.loops.auto" --hidden-import="uvicorn.protocols" --hidden-import="uvicorn.protocols.http" --hidden-import="uvicorn.protocols.http.auto" --hidden-import="uvicorn.protocols.websockets" --hidden-import="uvicorn.protocols.websockets.auto" --hidden-import="uvicorn.lifespan" --hidden-import="uvicorn.lifespan.on"
 ```
-*Run the resulting executable generated inside the `dist/` directory.*
+
+### Linux Package
+```bash
+pip install nuitka
+python -m nuitka --standalone --onefile --output-dir=build main.py
+```
+
+### macOS Application
+```bash
+pip install pyinstaller
+pyinstaller --name "CAMO_Controller" --windowed --onefile main.py
+```

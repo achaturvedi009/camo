@@ -1,0 +1,6 @@
+# CAMO Integration Report
+
+1. **Unused Functions / Dead Code**: `src/core/fingerprint.py` (legacy FingerprintGenerator) is unused now that we have `src/fingerprint_engine`.
+2. **Missing Imports / Wiring**: The multi-browser adapters (`src/camo/browser_engines`) are defined but not utilized by `browser_worker.py` correctly since the app only calls `camoufox_api`. We need to unify the engine dispatch logic.
+3. **Fingerprint Stability**: Resize events are not explicitly masked. We need to freeze dimension states securely on the initial page load so they do not drift if the user maximizes the local window testing.
+4. **General Status**: The architecture is highly modular and interconnected. The API exposes all necessary components safely.
