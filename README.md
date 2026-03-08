@@ -1,99 +1,88 @@
-# Camoufox Antidetect Browser
+# CAMO Antidetect Browser
 
-A lightweight, login-free antidetect browser platform using Camoufox as the core engine. It supports unlimited, isolated browser profiles with unique device fingerprints, proxy configurations, and OS spoofing capabilities.
+A lightweight, login-free, enterprise-grade anti-detect browser platform utilizing a hardened Camoufox core engine. CAMO supports unlimited, isolated browser profiles complete with cryptographically deterministic device fingerprints, dynamic JS runtime spoofing, fully mocked Chrome environments, and local SQLite data isolation.
 
-## Features
+It is specifically architected to bypass advanced bot detection mechanisms such as Pixelscan, Cloudflare Bot Management, FingerprintJS, DataDome, PerimeterX, and Kasada.
 
-- **Multi-Profile Management**: Create, edit, clone, and delete multiple isolated profiles without any login requirement.
-- **Fingerprint Engine**: Automatically generates realistic browser fingerprints (User-Agent, WebGL, Screen, Timezone, Languages, etc.) based on OS presets (Windows, Linux, Android). It supports variations within realistic data pools.
-- **Camoufox Version Manager**: Download and manage multiple versions of the Camoufox engine directly from PyPI. Assign specific engine versions to different profiles to ensure absolute isolation and testing flexibility.
-- **Proxy Integration**: Each profile can have its own HTTP, HTTPS, SOCKS4, or SOCKS5 proxy configuration. Includes clipboard auto-paste for easy setup.
-- **Local-First Storage**: All data is stored locally in an SQLite database (`data/profiles.db`). No account, no API key, no server dependency.
-- **Headless & Virtual Displays**: Auto-detects CI environments and falls back to virtual headless X11 servers using `Xvfb` if no physical display is found.
-- **Clean UI**: Simple local dashboard (Vue.js + Tailwind CSS) to manage profiles, preview fingerprints, manage engine versions, and test proxy configurations.
+---
 
-## Architecture
+## 🌟 Next-Generation Features
 
-- **Backend**: FastAPI (Python) running a local API server.
-- **Database**: SQLite (SQLAlchemy ORM) for profile and version storage.
-- **Frontend**: Vue.js + Tailwind CSS (Static files, loaded directly in the browser).
-- **Core Browser Engine**: Camoufox (Playwright + Firefox modifications) ensuring state-of-the-art fingerprint evasion.
+- **Multi-Profile Management**: Create, edit, clone, and delete isolated profiles effortlessly via the clean local UI, without any login limitations.
+- **Deterministic Fingerprint Engine**: Our ultra-fast (`<10ms`) core automatically generates valid, logically consistent, layered browser fingerprints (User-Agent, Canvas, WebGL, AudioContext, Network, Hardware, TLS) based on OS presets (Windows, Linux, Android) using SHA-256 seeding.
+- **Enterprise Runtime JS Spoofing**: Injects a hardened emulation layer via the Chrome DevTools Protocol (`add_init_script`) directly into the Playwright context *before* any page JavaScript runs. Overrides `navigator`, `screen`, `canvas`, `webrtc`, and hardware specs gracefully while masking function signatures with `[native code]` patches.
+- **Chrome Environment Emulation**: Fools invasive detections looking for real user profiles by mocking legacy extension and Chrome app scopes (`window.chrome.runtime`, `app`, `webstore`, `csi`, `loadTimes`).
+- **Timezone GeoIP Routing**: Automatically links the requested proxy IP with matching local Timezones, drastically reducing behavioral anomalies.
+- **Camoufox Version Manager**: Integrates with the Python `packaging` framework to cleanly fetch, isolate, and install multiple underlying browser versions directly from PyPI.
+- **Local-First Storage**: Uses SQLAlchemy atop an SQLite database (`data/profiles.db`). Zero telemetry, zero accounts, zero cloud dependencies.
 
-## Installation
+---
 
-1. Clone the repository and navigate into the folder.
-2. Create a virtual environment and install dependencies:
+## 🏗 Architecture Layers
+
+- **Backend API**: Local FastAPI / Uvicorn server handling all proxy, database, and process bridging.
+- **Core Orchestrator**: Manages parallel isolated `BrowserContext` instances.
+- **Fingerprint Engine (`src/fingerprint_engine/`)**: Datasets, builders, and validators for 10 levels of device modeling.
+- **Runtime Emulation (`src/runtime_spoofer/` & `src/chrome_emulation/`)**: Bundled JavaScript artifacts maintaining object prototype validity under adversarial inspection.
+- **Frontend App**: Responsive Vue.js + Tailwind CSS local UI wrapper.
+
+---
+
+## 🚀 Installation & Setup
+
+1. **Clone the Repository** and navigate into the folder.
+2. **Create a Virtual Environment** and install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. (Optional) Playwright system dependencies:
-   Depending on your operating system, you may need additional libraries required by Playwright.
+3. **Install Browser Binaries (Playwright System Dependencies)**:
    ```bash
    playwright install-deps
    ```
 
-## Usage
+---
 
-1. Start the API Server:
+## 💻 Usage
+
+1. **Start the Controller Backend:**
    ```bash
    python main.py
    ```
    *(Alternatively: `uvicorn src.api.main:app --host 127.0.0.1 --port 8000`)*
 
-2. Open the UI:
-   Just open `src/ui/index.html` in your favorite web browser (e.g., Chrome or regular Firefox).
+2. **Open the Control Panel UI:**
+   Open `src/ui/index.html` in any standard web browser (Chrome, Firefox, Safari).
 
-3. Navigate the Dashboard:
-   - **Profiles Tab**: Create a new profile, set the desired OS and Proxy configurations, preview the fingerprint, and hit **Start**.
-   - **Settings Tab**: View installed Camoufox versions, set a default system version, or fetch and install older/newer versions directly from PyPI.
+3. **Launch Profiles:**
+   Create a new profile (or clone an existing one), attach your desired Proxy details, preview the deterministic hardware fingerprint, and click **Start**.
 
-## Troubleshooting
+---
 
-- **Target closed / X11 Error**: If your browser instances crash immediately upon clicking "Start" on Linux, it may mean your environment lacks an X11 display. The application attempts to fall back to `virtual` mode, but ensure `Xvfb` is installed on your Linux distribution if running in a purely headless server environment.
-- **Dependencies Missing**: Run `pip install -r requirements.txt` again to ensure `camoufox[geoip]` and `SQLAlchemy` are fully installed.
+## 📦 Building Standalone Executables
 
-## Folder Structure
+If you wish to distribute the CAMO Backend without requiring local Python environments, use PyInstaller.
 
-- `data/`: SQLite database (`profiles.db`) and isolated browser user-data directories. (Ignored from version control)
-- `src/api/`: FastAPI backend implementation and routes.
-- `src/core/`: Application logic, fingerprint generator, database models, process management, and version manager.
-- `src/ui/`: The Vue.js dashboard frontend.
-- `~/.camo/camoufox_versions/`: Directory where downloaded Camoufox versions are stored for isolation.
-
-## Building Executables
-
-You can package the FastAPI backend into a single executable file for your operating system using **PyInstaller**. This removes the need for Python or pip installations on the host machine.
-
-### Prerequisites
-
-First, install PyInstaller:
 ```bash
 pip install pyinstaller
+pyinstaller --name "CAMO_Controller" --onefile main.py
 ```
+*Run the resulting executable generated inside the `dist/` directory.*
 
-### Windows (.exe)
+---
 
-Run the following command from the repository root:
-```bash
-pyinstaller --name "Camoufox_Antidetect" --onefile main.py
-```
-This will generate `Camoufox_Antidetect.exe` inside the `dist/` folder.
+## 🛠 Troubleshooting
 
-### Linux (Executable)
+- **Target closed / X11 Error (Linux)**: If a profile crashes upon start, your Linux machine may lack an active display server (e.g., inside Docker or a headless VPS). The app will automatically try to initialize `headless="virtual"`. Ensure `Xvfb` is installed via your OS package manager (`apt-get install xvfb`).
+- **Dependencies Missing**: If you encounter Pydantic or ModuleNotFound errors, simply re-run `pip install -r requirements.txt`.
 
-Run the following command from the repository root:
-```bash
-pyinstaller --name "Camoufox_Antidetect" --onefile main.py
-```
-This will generate an executable named `Camoufox_Antidetect` inside the `dist/` folder.
+---
 
-### macOS (Executable / .app)
-
-Run the following command from the repository root:
-```bash
-pyinstaller --name "Camoufox_Antidetect" --onefile main.py
-```
-This will generate an executable named `Camoufox_Antidetect` inside the `dist/` folder.
-
-*Note: Since the UI is purely HTML/JS, you can distribute the `src/ui/` folder alongside your executable, and simply open `src/ui/index.html` in a web browser while the executable is running in the background.*
+## 📁 Repository Structure
+- `data/`: Contains isolated `profiles.db` SQLite storage. (Ignored from version control).
+- `src/api/`: Main FastAPI router and endpoints.
+- `src/core/`: Database models, profile orchestrator, proxy validation.
+- `src/fingerprint_engine/`: Logic parsing JSON hardware sets into SHA-256 mapped characteristics.
+- `src/runtime_spoofer/`: Overrides core browser prototypes safely.
+- `src/chrome_emulation/`: Replicates `window.chrome` components precisely.
+- `src/ui/`: The dashboard GUI logic.
