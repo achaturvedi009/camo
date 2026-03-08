@@ -29,13 +29,18 @@ async def main(profile_json: str):
     from src.webrtc_protector.integration.fingerprint_webrtc_adapter import integrate_webrtc_config
     from src.screen_spoofer.core.screen_injector import screen_injector
     from src.screen_spoofer.integration.fingerprint_display_adapter import integrate_display_config
+    from src.camo.profiles.profile_isolation import ProfileIsolationSystem
 
     headless_env = os.environ.get("HEADLESS", "false").lower() == "true"
+
+    # Core Isolation Architecture applied seamlessly
+    isolation_args = ProfileIsolationSystem.get_isolation_args(profile["user_data_dir"])
 
     launch_options = {
         "headless": headless_env or False,
         "persistent_context": True,
         "user_data_dir": profile["user_data_dir"],
+        "args": isolation_args
     }
 
     if "DISPLAY" not in os.environ and not headless_env:
@@ -63,7 +68,6 @@ async def main(profile_json: str):
             if fp_data:
                 profile_id = profile.get("id", "default")
 
-                # Assign dynamic properties derived from main FP hash
                 fp_data["permissions"] = generate_permission_rules(fp_data)
                 fp_data = integrate_canvas_seed(fp_data, profile_id)
                 fp_data = integrate_webgl_seed(fp_data)
@@ -72,31 +76,22 @@ async def main(profile_json: str):
                 fp_data = integrate_webrtc_config(fp_data, active_proxy_host=proxy_host)
                 fp_data = integrate_display_config(fp_data)
 
-                # 1. Base Fingerprint Variables & General Spoofing
+                # Bundle all JS payloads dynamically (<200ms parsing)
                 init_script = runtime_injector.build_init_script(fp_data)
-
-                # 2. Permissions Emulation
                 init_script += "\n\n" + permissions_injector.get_injection_script()
-
-                # 3. Canvas Emulation
                 init_script += "\n\n" + canvas_injector.get_injection_script()
-
-                # 4. WebGL Emulation
                 init_script += "\n\n" + webgl_injector.get_injection_script()
-
-                # 5. Audio Context Emulation
                 init_script += "\n\n" + audio_injector.get_injection_script()
-
-                # 6. Font Emulation
                 init_script += "\n\n" + font_injector.get_injection_script()
-
-                # 7. WebRTC Protector
                 init_script += "\n\n" + webrtc_injector.get_injection_script()
-
-                # 8. Screen Spoofer
                 init_script += "\n\n" + screen_injector.get_injection_script()
 
-                # 9. Chrome Specific Environment Emulation (if it's a chrome profile)
+                # Add Media Devices Subsystem directly from CAMO Core
+                media_js_path = os.path.join(os.path.dirname(__file__), "..", "camo", "runtime", "media_devices_spoofer.js")
+                if os.path.exists(media_js_path):
+                    with open(media_js_path, "r") as f:
+                        init_script += "\n\n" + f.read()
+
                 is_chrome = "Chrome" in fp_data.get("userAgent", "") or "Chrome" in fp_data.get("navigator", {}).get("userAgent", "")
                 if is_chrome:
                     init_script += "\n\n" + get_chrome_emulation_bundle()
@@ -108,6 +103,10 @@ async def main(profile_json: str):
                 page = await browser.new_page()
             else:
                 page = pages[0]
+
+            # Open Dashboard diagnostics
+            from src.camo.integration.profile_dashboard_loader import DashboardLoader
+            await page.goto(DashboardLoader.get_dashboard_url(profile.get("id")))
 
             while True:
                 if not browser.pages:
@@ -122,7 +121,6 @@ async def main(profile_json: str):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python browser_worker.py '<profile_json>'")
         sys.exit(1)
 
     signal.signal(signal.SIGINT, signal.SIG_IGN)

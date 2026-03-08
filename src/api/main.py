@@ -10,6 +10,8 @@ from src.core.camoufox_version_manager import version_manager
 import json
 
 app = FastAPI(title="Antidetect Browser API")
+from src.camo.dashboard.backend.dashboard_api import router as dashboard_router
+app.include_router(dashboard_router, prefix="/dashboard-api")
 
 app.add_middleware(
     CORSMiddleware,

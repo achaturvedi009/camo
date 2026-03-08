@@ -1,37 +1,41 @@
-# CAMO Antidetect Browser
+# CAMO Enterprise Antidetect Browser Platform
 
-A lightweight, login-free, enterprise-grade anti-detect browser platform utilizing a hardened Camoufox core engine. CAMO supports unlimited, isolated browser profiles complete with cryptographically deterministic device fingerprints, dynamic JS runtime spoofing, fully mocked Chrome environments, and local SQLite data isolation.
+A lightweight, login-free, scalable enterprise-grade anti-detect browser platform utilizing a hardened Camoufox core engine. CAMO supports thousands of concurrent, isolated browser profiles completely masked with cryptographically deterministic device fingerprints, dynamic JS runtime spoofing, fully mocked Chrome environments, native media proxies, and isolated local SQLite architectures natively.
 
-It is specifically architected to bypass advanced bot detection mechanisms such as Pixelscan, Cloudflare Bot Management, FingerprintJS, DataDome, PerimeterX, and Kasada.
-
----
-
-## 🌟 Next-Generation Features
-
-- **Multi-Profile Management**: Create, edit, clone, and delete isolated profiles effortlessly via the clean local UI, without any login limitations.
-- **Deterministic Fingerprint Engine**: Our ultra-fast (`<10ms`) core automatically generates valid, logically consistent, layered browser fingerprints (User-Agent, Canvas, WebGL, AudioContext, Network, Hardware, TLS) based on OS presets (Windows, Linux, Android) using SHA-256 seeding.
-- **Enterprise Runtime JS Spoofing**: Injects a hardened emulation layer via the Chrome DevTools Protocol (`add_init_script`) directly into the Playwright context *before* any page JavaScript runs. Overrides `navigator`, `screen`, `canvas`, `webrtc`, and hardware specs gracefully while masking function signatures with `[native code]` patches.
-- **Enterprise Screen & Window Spoofing**: Clamps and mocks display primitives avoiding viewport detection mismatches securely. Simulates perfectly correlated bounds (`Outer >= Inner`) hiding headless execution window frames implicitly.
-- **Enterprise WebRTC Leak Protection Layer**: Dynamically blocks WebRTC media streams and STUN/TURN proxy discovery exploits preventing local internal network ranges (`192.168.x.x`) from leaking while ensuring external peer candidates reflect solely the active proxy IP flawlessly.
-- **Advanced Canvas Fingerprint Spoofing**: A dedicated enterprise pixel-noise rendering layer. Intercepts `toDataURL`, `toBlob`, and `getImageData`, silently shuffling pixel entropy perfectly tied to your profile ID, evading FingerprintJS canvas tracking schemas `< 1ms` speed overhead.
-- **Enterprise WebGL Spoofing**: An advanced deterministic GPU emulation layer mocking underlying hardware `VENDOR` and `RENDERER` profiles. Mocks maximum texture limits, exact anisotropic filtering extensions natively matching Windows/Mac/Linux GPU datasets, alongside randomized `readPixels` noise.
-- **AudioContext Fingerprint Emulation**: Injects micro-deterministic noise across native `AudioBuffer` and `AnalyserNode` components safely. Validates `startRendering` buffer returns modifying frequency hashes implicitly while neutralizing detection logic entirely.
-- **Enterprise Font Emulation**: Hides physical system font fingerprints mapping strictly isolated OS fonts (`fonts_windows.json`, `fonts_macos.json`). Defeats FontFace bounding-box metric comparisons flawlessly using Canvas TextMetrics intercepting logic and generic font overrides natively mapping into rendering properties.
-- **Chrome Environment Emulation**: Fools invasive detections looking for real user profiles by mocking legacy extension and Chrome app scopes (`window.chrome.runtime`, `app`, `webstore`, `csi`, `loadTimes`).
-- **Permissions API Emulation**: Provides an extremely accurate stealth implementation of `navigator.permissions.query()`. It maps OS-level fingerprint markers into appropriate `PermissionStatus` promise resolutions while preserving `toString()` and property prototype integrity to spoof bot defense queries.
-- **Timezone GeoIP Routing**: Automatically links the requested proxy IP with matching local Timezones, drastically reducing behavioral anomalies.
-- **Camoufox Version Manager**: Integrates with the Python `packaging` framework to cleanly fetch, isolate, and install multiple underlying browser versions directly from PyPI.
-- **Local-First Storage**: Uses SQLAlchemy atop an SQLite database (`data/profiles.db`). Zero telemetry, zero accounts, zero cloud dependencies.
+It is specifically architected to bypass advanced bot detection mechanisms such as Pixelscan, Cloudflare Bot Management, FingerprintJS, DataDome, PerimeterX, Kasada, and AmiUnique.
 
 ---
 
-## 🏗 Architecture Layers
+## 🌟 Enterprise Features Matrix
 
-- **Backend API**: Local FastAPI / Uvicorn server handling all proxy, database, and process bridging.
-- **Core Orchestrator**: Manages parallel isolated `BrowserContext` instances.
-- **Fingerprint Engine (`src/fingerprint_engine/`)**: Datasets, builders, and validators for 10 levels of device modeling.
-- **Runtime Emulation (`src/runtime_spoofer/`, `src/chrome_emulation/`, `src/permissions_spoofer/`, `src/canvas_spoofer/`, `src/webgl_spoofer/`, `src/audio_spoofer/`, `src/font_spoofer/`, `src/webrtc_protector/`, `src/screen_spoofer/`)**: Bundled JavaScript artifacts maintaining object prototype validity under adversarial inspection.
-- **Frontend App**: Responsive Vue.js + Tailwind CSS local UI wrapper.
+- **Multi-Profile Database Management**: Run thousands of distinct isolated profiles utilizing SQLAlchemy bounding over SQLite (`data/profiles.db`).
+- **Cryptographic Fingerprint Engine**: Ultra-fast `<10ms` core generating valid, logically consistent, layered hardware configurations based off profile SHA-256 seeding preventing regression collisions cleanly.
+- **Enterprise Runtime JS Spoofing**: Injects a hardened emulation layer via Playwright's `add_init_script`. Modifies generic navigator properties natively retaining `[native code]` `.toString()` validations.
+- **Advanced Canvas & WebGL Emulation**: Dedicated pixel-noise rendering engines dynamically shifting pixel bounds synchronously circumventing exact hash limits mapping perfectly over `UNMASKED_RENDERER` restrictions locally.
+- **AudioContext Spoofing**: Wraps native `AudioBuffer` and `OfflineAudioContext` pipelines protecting analysis routines utilizing native offset arrays dynamically.
+- **Enterprise Font Emulation**: Maps perfectly localized bounding boxes bypassing precise CSS FontFace scaling tricks via TextMetrics injection limits mapping exactly to the chosen OS class correctly.
+- **WebRTC & Network Protections**: Defeats STUN/TURN proxy leaks directly via parsing asynchronous local IP blocks bridging only valid explicit assigned proxy paths globally blocking localized footprint discovery algorithms natively.
+- **Media Devices Generator**: Masks native driver outputs wrapping `navigator.mediaDevices.enumerateDevices()` strictly matching internal profile hashing identifiers predictably across restarts correctly avoiding dynamic mapping bugs completely.
+- **Automated Validation Core**: Evaluates UA mismatches, graphic OS mapping disparities natively resolving strict validation checks before execution safely natively.
+- **Integrated Diagnostics UI**: Evaluates hardware spoof metrics visually via a local unified tracking dashboard booted securely mapping proxy health boundaries clearly on startup natively mapped efficiently.
+- **Timezone GeoIP Routing**: Reconciles public IP inputs inherently assigning the accurate UTC offset arrays explicitly masking mismatched browser timing metrics successfully natively via external parsing routes natively.
+
+---
+
+## 🏗 Subsystem Layout
+
+- **`src/api/`**: Main backend endpoints mapping UI boundaries to Playwright states correctly.
+- **`src/core/`**: Lower-layer orchestrators (Database Models, Processes).
+- **`src/fingerprint_engine/`**: The deterministic JSON hardware generator core.
+- **`src/runtime_spoofer/`**: Generalized Javascript `navigator` / JS API interceptors.
+- **`src/chrome_emulation/`**: Accurate `window.chrome.app` & `runtime` simulators masking headless boundaries tightly.
+- **`src/permissions_spoofer/`**: Promisified `.query()` maskers strictly tracking deterministic arrays precisely.
+- **`src/canvas_spoofer/`**: Low-level pixel manipulation and `toDataUrl` injection limits safely.
+- **`src/webgl_spoofer/`**: High-performance graphics extension manipulation overrides seamlessly.
+- **`src/audio_spoofer/`**: Floating array manipulations preventing generic hardware correlations accurately.
+- **`src/font_spoofer/`**: Measurement bounds preventing standard CSS bounding probes seamlessly.
+- **`src/webrtc_protector/`**: Subnet IP parsing arrays avoiding leak parameters correctly reliably.
+- **`src/camo/`**: The Enterprise configuration backend isolating user-directories (`profiles/`), checking fingerprint metrics (`security/`), generating media definitions (`runtime/`), managing localized proxy states (`network/`), handling dashboard analytics natively (`dashboard/`), and integrating engines successfully (`browser_engines/`).
 
 ---
 
@@ -43,7 +47,7 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
    pip install -r requirements.txt
    ```
 
-3. **Install Browser Binaries (Playwright System Dependencies)**:
+3. **Install Browser Binaries (Playwright Dependencies)**:
    ```bash
    playwright install-deps
    ```
@@ -56,47 +60,20 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
    ```bash
    python main.py
    ```
-   *(Alternatively: `uvicorn src.api.main:app --host 127.0.0.1 --port 8000`)*
 
 2. **Open the Control Panel UI:**
    Open `src/ui/index.html` in any standard web browser (Chrome, Firefox, Safari).
 
 3. **Launch Profiles:**
-   Create a new profile (or clone an existing one), attach your desired Proxy details, preview the deterministic hardware fingerprint, and click **Start**.
+   Hit start on any assigned profiles and CAMO will orchestrate the database layers launching isolated binaries perfectly protected immediately routing into the diagnostic startup dashboard automatically correctly mapping validations visually successfully.
 
 ---
 
 ## 📦 Building Standalone Executables
 
-If you wish to distribute the CAMO Backend without requiring local Python environments, use PyInstaller.
-
+If you wish to distribute the CAMO Backend natively.
 ```bash
 pip install pyinstaller
 pyinstaller --name "CAMO_Controller" --onefile main.py
 ```
 *Run the resulting executable generated inside the `dist/` directory.*
-
----
-
-## 🛠 Troubleshooting
-
-- **Target closed / X11 Error (Linux)**: If a profile crashes upon start, your Linux machine may lack an active display server (e.g., inside Docker or a headless VPS). The app will automatically try to initialize `headless="virtual"`. Ensure `Xvfb` is installed via your OS package manager (`apt-get install xvfb`).
-- **Dependencies Missing**: If you encounter Pydantic or ModuleNotFound errors, simply re-run `pip install -r requirements.txt`.
-
----
-
-## 📁 Repository Structure
-- `data/`: Contains isolated `profiles.db` SQLite storage. (Ignored from version control).
-- `src/api/`: Main FastAPI router and endpoints.
-- `src/core/`: Database models, profile orchestrator, proxy validation.
-- `src/fingerprint_engine/`: Logic parsing JSON hardware sets into SHA-256 mapped characteristics.
-- `src/runtime_spoofer/`: Overrides core browser prototypes safely.
-- `src/chrome_emulation/`: Replicates `window.chrome` components precisely.
-- `src/permissions_spoofer/`: Masks `navigator.permissions` properties perfectly mapping rules to the current OS spoofing layer.
-- `src/canvas_spoofer/`: Modifies rendering canvas pixels to generate consistent profile-level cryptographic spoofing hashes.
-- `src/webgl_spoofer/`: Modifies GPU profiles and parameters rendering realistic hardware configurations safely against Kasada / DataDome.
-- `src/audio_spoofer/`: Hooks `AnalyserNode` and offline rendering outputs shifting floating arrays resolving DataDome hash queries flawlessly.
-- `src/font_spoofer/`: Masks system fonts replacing TextMetrics results dynamically preventing CSS FontFace inspection attacks globally.
-- `src/webrtc_protector/`: Implements proxy-driven connection sanitization filtering localized IP SDP candidates blocking TCP/UDP routing leaks securely.
-- `src/screen_spoofer/`: Clamps viewport metrics consistently overriding mismatched window boundaries escaping native automation checks natively.
-- `src/ui/`: The dashboard GUI logic.
