@@ -3,11 +3,18 @@ import sys
 import json
 import traceback
 import signal
-from camoufox.async_api import AsyncCamoufox
 import os
+import importlib.util
 
 async def main(profile_json: str):
     profile = json.loads(profile_json)
+
+    # Optional dynamic loading for camoufox version isolation
+    if "camoufox_lib_path" in profile and profile["camoufox_lib_path"]:
+        sys.path.insert(0, profile["camoufox_lib_path"])
+
+    from camoufox.async_api import AsyncCamoufox
+    from browserforge.fingerprints import Fingerprint
 
     launch_options = {
         "headless": False,
@@ -15,6 +22,18 @@ async def main(profile_json: str):
         "user_data_dir": profile["user_data_dir"],
         "os": profile["os"],
     }
+
+    fp_data = profile.get("fingerprint")
+    if fp_data:
+        try:
+            # Reconstruct fingerprint
+            # Ensure proper casting or just pass dict
+            # Actually, `AsyncCamoufox` accepts Fingerprint class object or `dict` in newer versions.
+            # Usually, browserforge fingerprint is passed directly.
+            fp = Fingerprint(**fp_data) if isinstance(fp_data, dict) else fp_data
+            launch_options["fingerprint"] = fp
+        except Exception as e:
+            print("Error loading fingerprint", e)
 
     if "proxy" in profile and profile["proxy"]:
         proxy_conf = profile["proxy"]

@@ -5,6 +5,7 @@ import json
 from typing import Dict, Optional
 from .profile_manager import Profile, profile_manager
 from pydantic import BaseModel
+from .db import SessionLocal, CamoufoxVersionModel
 
 class BrowserManager:
     def __init__(self):
@@ -30,8 +31,25 @@ class BrowserManager:
             "id": profile.id,
             "os": profile.os,
             "user_data_dir": user_data_dir,
-            "proxy": profile.proxy.model_dump() if profile.proxy else None
+            "proxy": profile.proxy.model_dump() if profile.proxy else None,
+            "fingerprint": profile.fingerprint
         }
+
+        # Determine version path if a specific version is assigned
+        version_path = None
+        db = SessionLocal()
+        if profile.camoufox_version:
+            v_model = db.query(CamoufoxVersionModel).filter(CamoufoxVersionModel.version == profile.camoufox_version).first()
+            if v_model and v_model.installed:
+                version_path = v_model.install_path
+        else:
+            default_v = db.query(CamoufoxVersionModel).filter(CamoufoxVersionModel.is_default == True).first()
+            if default_v and default_v.installed:
+                version_path = default_v.install_path
+        db.close()
+
+        if version_path:
+            profile_data["camoufox_lib_path"] = version_path
 
         # Spawn child process
         cmd = ["python", "-m", "src.core.browser_worker", json.dumps(profile_data)]
