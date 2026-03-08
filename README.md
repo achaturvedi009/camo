@@ -12,6 +12,7 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
 - **Deterministic Fingerprint Engine**: Our ultra-fast (`<10ms`) core automatically generates valid, logically consistent, layered browser fingerprints (User-Agent, Canvas, WebGL, AudioContext, Network, Hardware, TLS) based on OS presets (Windows, Linux, Android) using SHA-256 seeding.
 - **Enterprise Runtime JS Spoofing**: Injects a hardened emulation layer via the Chrome DevTools Protocol (`add_init_script`) directly into the Playwright context *before* any page JavaScript runs. Overrides `navigator`, `screen`, `canvas`, `webrtc`, and hardware specs gracefully while masking function signatures with `[native code]` patches.
 - **Chrome Environment Emulation**: Fools invasive detections looking for real user profiles by mocking legacy extension and Chrome app scopes (`window.chrome.runtime`, `app`, `webstore`, `csi`, `loadTimes`).
+- **Permissions API Emulation**: Provides an extremely accurate stealth implementation of `navigator.permissions.query()`. It maps OS-level fingerprint markers into appropriate `PermissionStatus` promise resolutions while preserving `toString()` and property prototype integrity to spoof bot defense queries.
 - **Timezone GeoIP Routing**: Automatically links the requested proxy IP with matching local Timezones, drastically reducing behavioral anomalies.
 - **Camoufox Version Manager**: Integrates with the Python `packaging` framework to cleanly fetch, isolate, and install multiple underlying browser versions directly from PyPI.
 - **Local-First Storage**: Uses SQLAlchemy atop an SQLite database (`data/profiles.db`). Zero telemetry, zero accounts, zero cloud dependencies.
@@ -23,7 +24,7 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
 - **Backend API**: Local FastAPI / Uvicorn server handling all proxy, database, and process bridging.
 - **Core Orchestrator**: Manages parallel isolated `BrowserContext` instances.
 - **Fingerprint Engine (`src/fingerprint_engine/`)**: Datasets, builders, and validators for 10 levels of device modeling.
-- **Runtime Emulation (`src/runtime_spoofer/` & `src/chrome_emulation/`)**: Bundled JavaScript artifacts maintaining object prototype validity under adversarial inspection.
+- **Runtime Emulation (`src/runtime_spoofer/`, `src/chrome_emulation/`, `src/permissions_spoofer/`)**: Bundled JavaScript artifacts maintaining object prototype validity under adversarial inspection.
 - **Frontend App**: Responsive Vue.js + Tailwind CSS local UI wrapper.
 
 ---
@@ -85,4 +86,5 @@ pyinstaller --name "CAMO_Controller" --onefile main.py
 - `src/fingerprint_engine/`: Logic parsing JSON hardware sets into SHA-256 mapped characteristics.
 - `src/runtime_spoofer/`: Overrides core browser prototypes safely.
 - `src/chrome_emulation/`: Replicates `window.chrome` components precisely.
+- `src/permissions_spoofer/`: Masks `navigator.permissions` properties perfectly mapping rules to the current OS spoofing layer.
 - `src/ui/`: The dashboard GUI logic.
