@@ -1,0 +1,4 @@
+[
+  {"max_texture_size": 16384, "extensions": ["EXT_color_buffer_float", "EXT_texture_filter_anisotropic", "OES_standard_derivatives", "WEBGL_compressed_texture_s3tc"], "shader_precision": "highp"},
+  {"max_texture_size": 8192, "extensions": ["EXT_color_buffer_float", "OES_standard_derivatives", "WEBGL_compressed_texture_s3tc"], "shader_precision": "mediump"}
+]

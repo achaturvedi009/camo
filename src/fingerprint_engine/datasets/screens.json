@@ -1,0 +1,10 @@
+[
+  {"width": 1920, "height": 1080, "colorDepth": 24, "pixelRatio": 1},
+  {"width": 1366, "height": 768, "colorDepth": 24, "pixelRatio": 1},
+  {"width": 2560, "height": 1440, "colorDepth": 24, "pixelRatio": 1},
+  {"width": 3840, "height": 2160, "colorDepth": 24, "pixelRatio": 1.5},
+  {"width": 2560, "height": 1600, "colorDepth": 24, "pixelRatio": 2},
+  {"width": 1440, "height": 900, "colorDepth": 24, "pixelRatio": 2},
+  {"width": 360, "height": 800, "colorDepth": 24, "pixelRatio": 3},
+  {"width": 412, "height": 915, "colorDepth": 24, "pixelRatio": 2.6}
+]

@@ -1,0 +1,16 @@
+{
+  "US": ["America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles"],
+  "GB": ["Europe/London"],
+  "ES": ["Europe/Madrid"],
+  "FR": ["Europe/Paris"],
+  "DE": ["Europe/Berlin"],
+  "IT": ["Europe/Rome"],
+  "JP": ["Asia/Tokyo"],
+  "KR": ["Asia/Seoul"],
+  "CN": ["Asia/Shanghai"],
+  "RU": ["Europe/Moscow", "Asia/Yekaterinburg", "Asia/Novosibirsk"],
+  "BR": ["America/Sao_Paulo", "America/Manaus"],
+  "IN": ["Asia/Kolkata"],
+  "AU": ["Australia/Sydney", "Australia/Melbourne", "Australia/Perth"],
+  "CA": ["America/Toronto", "America/Vancouver"]
+}

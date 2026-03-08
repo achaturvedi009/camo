@@ -1,0 +1,14 @@
+[
+  ["en-US", "en"],
+  ["en-GB", "en"],
+  ["es-ES", "es", "en"],
+  ["fr-FR", "fr", "en"],
+  ["de-DE", "de", "en"],
+  ["it-IT", "it", "en"],
+  ["ja-JP", "ja", "en"],
+  ["ko-KR", "ko", "en"],
+  ["zh-CN", "zh", "en"],
+  ["ru-RU", "ru", "en"],
+  ["pt-BR", "pt", "en"],
+  ["hi-IN", "hi", "en"]
+]
