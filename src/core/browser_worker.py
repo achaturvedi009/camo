@@ -13,6 +13,7 @@ async def main(profile_json: str):
         sys.path.insert(0, profile["camoufox_lib_path"])
 
     from camoufox.async_api import AsyncCamoufox
+    from src.runtime_spoofer.core.runtime_injector import runtime_injector
 
     headless_env = os.environ.get("HEADLESS", "false").lower() == "true"
 
@@ -25,9 +26,13 @@ async def main(profile_json: str):
     if "DISPLAY" not in os.environ and not headless_env:
         launch_options["headless"] = "virtual"
 
-    # For now, pass os and proxy to Camoufox. It automatically spoofs timezone based on proxy IP using the GeoIP extension!
-    # So we don't need to manually spoof the timezone, the framework does it natively when we use proxy.
-    launch_options["os"] = profile["os"]
+    fp_data = profile.get("fingerprint")
+    if fp_data:
+        # Fallback to internal fingerprint logic on Camoufox via OS passing for initial binary patches
+        # Or you could let Camoufox handle things internally. But we are also adding JS injection.
+        launch_options["os"] = profile.get("os", "windows")
+    else:
+        launch_options["os"] = profile.get("os", "windows")
 
     if "proxy" in profile and profile["proxy"]:
         proxy_conf = profile["proxy"]
@@ -39,6 +44,11 @@ async def main(profile_json: str):
 
     try:
         async with AsyncCamoufox(**launch_options) as browser:
+            # Inject Runtime Spoofer using add_init_script for all pages in context
+            if fp_data:
+                init_script = runtime_injector.build_init_script(fp_data)
+                await browser.add_init_script(init_script)
+
             pages = browser.pages
             if not pages:
                 page = await browser.new_page()
