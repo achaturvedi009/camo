@@ -9,31 +9,40 @@ import importlib.util
 async def main(profile_json: str):
     profile = json.loads(profile_json)
 
-    # Optional dynamic loading for camoufox version isolation
     if "camoufox_lib_path" in profile and profile["camoufox_lib_path"]:
         sys.path.insert(0, profile["camoufox_lib_path"])
 
     from camoufox.async_api import AsyncCamoufox
     from browserforge.fingerprints import Fingerprint
 
+    headless_env = os.environ.get("HEADLESS", "false").lower() == "true"
+
+    # We remove 'os' from launch options because it conflicts with `fingerprint`.
+    # Camoufox generates fingerprint based on OS, but if we pass `fingerprint` explicitely,
+    # passing both might raise conflicts or cause unexpected behavior.
+
     launch_options = {
-        "headless": False,
+        "headless": headless_env or False,
         "persistent_context": True,
         "user_data_dir": profile["user_data_dir"],
-        "os": profile["os"],
     }
+
+    if "DISPLAY" not in os.environ and not headless_env:
+        launch_options["headless"] = "virtual"
 
     fp_data = profile.get("fingerprint")
     if fp_data:
         try:
-            # Reconstruct fingerprint
-            # Ensure proper casting or just pass dict
-            # Actually, `AsyncCamoufox` accepts Fingerprint class object or `dict` in newer versions.
-            # Usually, browserforge fingerprint is passed directly.
+            # Reconstruct fingerprint properly
             fp = Fingerprint(**fp_data) if isinstance(fp_data, dict) else fp_data
             launch_options["fingerprint"] = fp
         except Exception as e:
             print("Error loading fingerprint", e)
+            # fallback to OS spoofing if fingerprint parsing fails
+            launch_options["os"] = profile["os"]
+    else:
+        # Generate on the fly using camoufox's parameter if none saved
+        launch_options["os"] = profile["os"]
 
     if "proxy" in profile and profile["proxy"]:
         proxy_conf = profile["proxy"]
@@ -51,7 +60,6 @@ async def main(profile_json: str):
             else:
                 page = pages[0]
 
-            # Keep loop alive until all pages are closed
             while True:
                 if not browser.pages:
                     break
