@@ -13,6 +13,7 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
 - **Enterprise Runtime JS Spoofing**: Injects a hardened emulation layer via the Chrome DevTools Protocol (`add_init_script`) directly into the Playwright context *before* any page JavaScript runs. Overrides `navigator`, `screen`, `canvas`, `webrtc`, and hardware specs gracefully while masking function signatures with `[native code]` patches.
 - **Advanced Canvas Fingerprint Spoofing**: A dedicated enterprise pixel-noise rendering layer. Intercepts `toDataURL`, `toBlob`, and `getImageData`, silently shuffling pixel entropy perfectly tied to your profile ID, evading FingerprintJS canvas tracking schemas `< 1ms` speed overhead.
 - **Enterprise WebGL Spoofing**: An advanced deterministic GPU emulation layer mocking underlying hardware `VENDOR` and `RENDERER` profiles. Mocks maximum texture limits, exact anisotropic filtering extensions natively matching Windows/Mac/Linux GPU datasets, alongside randomized `readPixels` noise.
+- **AudioContext Fingerprint Emulation**: Injects micro-deterministic noise across native `AudioBuffer` and `AnalyserNode` components safely. Validates `startRendering` buffer returns modifying frequency hashes implicitly while neutralizing detection logic entirely.
 - **Chrome Environment Emulation**: Fools invasive detections looking for real user profiles by mocking legacy extension and Chrome app scopes (`window.chrome.runtime`, `app`, `webstore`, `csi`, `loadTimes`).
 - **Permissions API Emulation**: Provides an extremely accurate stealth implementation of `navigator.permissions.query()`. It maps OS-level fingerprint markers into appropriate `PermissionStatus` promise resolutions while preserving `toString()` and property prototype integrity to spoof bot defense queries.
 - **Timezone GeoIP Routing**: Automatically links the requested proxy IP with matching local Timezones, drastically reducing behavioral anomalies.
@@ -26,7 +27,7 @@ It is specifically architected to bypass advanced bot detection mechanisms such 
 - **Backend API**: Local FastAPI / Uvicorn server handling all proxy, database, and process bridging.
 - **Core Orchestrator**: Manages parallel isolated `BrowserContext` instances.
 - **Fingerprint Engine (`src/fingerprint_engine/`)**: Datasets, builders, and validators for 10 levels of device modeling.
-- **Runtime Emulation (`src/runtime_spoofer/`, `src/chrome_emulation/`, `src/permissions_spoofer/`, `src/canvas_spoofer/`, `src/webgl_spoofer/`)**: Bundled JavaScript artifacts maintaining object prototype validity under adversarial inspection.
+- **Runtime Emulation (`src/runtime_spoofer/`, `src/chrome_emulation/`, `src/permissions_spoofer/`, `src/canvas_spoofer/`, `src/webgl_spoofer/`, `src/audio_spoofer/`)**: Bundled JavaScript artifacts maintaining object prototype validity under adversarial inspection.
 - **Frontend App**: Responsive Vue.js + Tailwind CSS local UI wrapper.
 
 ---
@@ -91,4 +92,5 @@ pyinstaller --name "CAMO_Controller" --onefile main.py
 - `src/permissions_spoofer/`: Masks `navigator.permissions` properties perfectly mapping rules to the current OS spoofing layer.
 - `src/canvas_spoofer/`: Modifies rendering canvas pixels to generate consistent profile-level cryptographic spoofing hashes.
 - `src/webgl_spoofer/`: Modifies GPU profiles and parameters rendering realistic hardware configurations safely against Kasada / DataDome.
+- `src/audio_spoofer/`: Hooks `AnalyserNode` and offline rendering outputs shifting floating arrays resolving DataDome hash queries flawlessly.
 - `src/ui/`: The dashboard GUI logic.

@@ -21,6 +21,8 @@ async def main(profile_json: str):
     from src.canvas_spoofer.integration.fingerprint_canvas_adapter import integrate_canvas_seed
     from src.webgl_spoofer.core.webgl_injector import webgl_injector
     from src.webgl_spoofer.integration.fingerprint_webgl_adapter import integrate_webgl_seed
+    from src.audio_spoofer.core.audio_injector import audio_injector
+    from src.audio_spoofer.integration.fingerprint_audio_adapter import integrate_audio_seed
 
     headless_env = os.environ.get("HEADLESS", "false").lower() == "true"
 
@@ -49,12 +51,14 @@ async def main(profile_json: str):
 
     try:
         async with AsyncCamoufox(**launch_options) as browser:
-            # Inject Runtime Spoofer using add_init_script for all pages in context
             if fp_data:
+                profile_id = profile.get("id", "default")
+
                 # Assign dynamic properties derived from main FP hash
                 fp_data["permissions"] = generate_permission_rules(fp_data)
-                fp_data = integrate_canvas_seed(fp_data, profile.get("id", "default"))
+                fp_data = integrate_canvas_seed(fp_data, profile_id)
                 fp_data = integrate_webgl_seed(fp_data)
+                fp_data = integrate_audio_seed(fp_data, profile_id)
 
                 # 1. Base Fingerprint Variables & General Spoofing
                 init_script = runtime_injector.build_init_script(fp_data)
@@ -68,7 +72,10 @@ async def main(profile_json: str):
                 # 4. WebGL Emulation
                 init_script += "\n\n" + webgl_injector.get_injection_script()
 
-                # 5. Chrome Specific Environment Emulation (if it's a chrome profile)
+                # 5. Audio Context Emulation
+                init_script += "\n\n" + audio_injector.get_injection_script()
+
+                # 6. Chrome Specific Environment Emulation (if it's a chrome profile)
                 is_chrome = "Chrome" in fp_data.get("userAgent", "") or "Chrome" in fp_data.get("navigator", {}).get("userAgent", "")
                 if is_chrome:
                     init_script += "\n\n" + get_chrome_emulation_bundle()
