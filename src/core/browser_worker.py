@@ -23,6 +23,8 @@ async def main(profile_json: str):
     from src.webgl_spoofer.integration.fingerprint_webgl_adapter import integrate_webgl_seed
     from src.audio_spoofer.core.audio_injector import audio_injector
     from src.audio_spoofer.integration.fingerprint_audio_adapter import integrate_audio_seed
+    from src.font_spoofer.core.font_injector import font_injector
+    from src.font_spoofer.integration.fingerprint_font_adapter import integrate_font_seed
 
     headless_env = os.environ.get("HEADLESS", "false").lower() == "true"
 
@@ -35,11 +37,12 @@ async def main(profile_json: str):
     if "DISPLAY" not in os.environ and not headless_env:
         launch_options["headless"] = "virtual"
 
+    os_type = profile.get("os", "windows")
     fp_data = profile.get("fingerprint")
     if fp_data:
-        launch_options["os"] = profile.get("os", "windows")
+        launch_options["os"] = os_type
     else:
-        launch_options["os"] = profile.get("os", "windows")
+        launch_options["os"] = os_type
 
     if "proxy" in profile and profile["proxy"]:
         proxy_conf = profile["proxy"]
@@ -59,6 +62,7 @@ async def main(profile_json: str):
                 fp_data = integrate_canvas_seed(fp_data, profile_id)
                 fp_data = integrate_webgl_seed(fp_data)
                 fp_data = integrate_audio_seed(fp_data, profile_id)
+                fp_data = integrate_font_seed(fp_data, os_type)
 
                 # 1. Base Fingerprint Variables & General Spoofing
                 init_script = runtime_injector.build_init_script(fp_data)
@@ -75,7 +79,10 @@ async def main(profile_json: str):
                 # 5. Audio Context Emulation
                 init_script += "\n\n" + audio_injector.get_injection_script()
 
-                # 6. Chrome Specific Environment Emulation (if it's a chrome profile)
+                # 6. Font Emulation
+                init_script += "\n\n" + font_injector.get_injection_script()
+
+                # 7. Chrome Specific Environment Emulation (if it's a chrome profile)
                 is_chrome = "Chrome" in fp_data.get("userAgent", "") or "Chrome" in fp_data.get("navigator", {}).get("userAgent", "")
                 if is_chrome:
                     init_script += "\n\n" + get_chrome_emulation_bundle()
